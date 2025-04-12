@@ -6,5 +6,12 @@ build:
 run: build
 	@./tmp/$(PROJECT_NAME)
 
+test:
+	@go test ./...
+
+coverage:
+	@go test ./... -coverprofile="./tmp/cover.out"
+	@go tool cover -html="./tmp/cover.out"
+
 clean:
 	@rm -rf ./tmp

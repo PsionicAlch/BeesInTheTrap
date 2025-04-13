@@ -45,7 +45,9 @@ make run
 
 This builds and runs the game in one step.
 
-### Running Tests
+---
+
+## 🧪 Running Tests
 
 ```bash
 make test
@@ -59,7 +61,9 @@ make coverage
 
 A coverage report will be generated and opened in your browser.
 
-### Clean Build Artifacts
+---
+
+## 🧹 Clean Build Artifacts
 
 ```bash
 make clean

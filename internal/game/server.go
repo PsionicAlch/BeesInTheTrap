@@ -69,7 +69,7 @@ func (server *GameServer) run() {
 // It waits for input, applies damage to a random bee, and checks for win conditions.
 func (server *GameServer) playersTurn() {
 	// Wait for the player's input.
-	server.communication.waitForPlayer()
+	server.communication.WaitForPlayer()
 
 	// Get a reference to a random bee from the hive.
 	beeIndex := rand.IntN(len(server.state.Hive))
@@ -77,7 +77,7 @@ func (server *GameServer) playersTurn() {
 
 	// Check to see if player misses their shot.
 	if rand.UintN(101) < server.state.Player.MissChance {
-		server.communication.hitResponse("Miss! You just missed the hive, better luck next time!", server.state)
+		server.communication.HitResponse("Miss! You just missed the hive, better luck next time!", server.state)
 		return
 	}
 
@@ -92,7 +92,7 @@ func (server *GameServer) playersTurn() {
 	if beeDied && selectedBee.Type == QueenBee {
 		server.finished = true
 
-		server.communication.gameFinishedResponse(hitMsg, server.state)
+		server.communication.GameFinishedResponse(hitMsg, server.state)
 		return
 	}
 
@@ -101,7 +101,7 @@ func (server *GameServer) playersTurn() {
 		server.state.Hive = slices.Delete(server.state.Hive, beeIndex, beeIndex+1)
 	}
 
-	server.communication.hitResponse(hitMsg, server.state)
+	server.communication.HitResponse(hitMsg, server.state)
 }
 
 // hivesTurn handles the hive's action phase.
@@ -115,7 +115,7 @@ func (server *GameServer) hivesTurn() {
 	// Check to see if the bee misses their shot.
 	if rand.UintN(101) <= selectedBee.MissChance {
 		msg := fmt.Sprintf("Buzz! That was close! The %s just missed you!", selectedBee.Type)
-		server.communication.stingResponse(msg, server.state)
+		server.communication.StingResponse(msg, server.state)
 		return
 	}
 
@@ -130,9 +130,9 @@ func (server *GameServer) hivesTurn() {
 	if playerDied {
 		server.finished = true
 
-		server.communication.gameFinishedResponse(stingMsg, server.state)
+		server.communication.GameFinishedResponse(stingMsg, server.state)
 		return
 	}
 
-	server.communication.stingResponse(stingMsg, server.state)
+	server.communication.StingResponse(stingMsg, server.state)
 }

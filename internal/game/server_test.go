@@ -248,18 +248,18 @@ func (m *MockProtocol) WaitForCPU() Event {
 	return Event{}
 }
 
-func (m *MockProtocol) waitForPlayer() {}
+func (m *MockProtocol) WaitForPlayer() {}
 
-func (m *MockProtocol) hitResponse(msg string, state GameState) {
+func (m *MockProtocol) HitResponse(msg string, state GameState) {
 	m.currentMessage = msg
 	m.currentState = state
 }
 
-func (m *MockProtocol) stingResponse(msg string, state GameState) {
+func (m *MockProtocol) StingResponse(msg string, state GameState) {
 	m.currentMessage = msg
 	m.currentState = state
 }
 
-func (m *MockProtocol) gameFinishedResponse(msg string, state GameState) {
+func (m *MockProtocol) GameFinishedResponse(msg string, state GameState) {
 	m.finishedCalled = true
 }

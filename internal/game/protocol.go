@@ -3,10 +3,10 @@ package game
 type Protocol interface {
 	Hit() Event
 	WaitForCPU() Event
-	waitForPlayer()
-	hitResponse(string, GameState)
-	stingResponse(string, GameState)
-	gameFinishedResponse(string, GameState)
+	WaitForPlayer()
+	HitResponse(string, GameState)
+	StingResponse(string, GameState)
+	GameFinishedResponse(string, GameState)
 }
 
 // CommunicationProtocol encapsulates the message flow between
@@ -41,12 +41,12 @@ func (protocol *CommunicationProtocol) WaitForCPU() Event {
 }
 
 // waitForPlayer blocks until a player action is received.
-func (protocol *CommunicationProtocol) waitForPlayer() {
+func (protocol *CommunicationProtocol) WaitForPlayer() {
 	<-protocol.hitSignal
 }
 
 // hitResponse sends an event indicating the player has performed an attack.
-func (protocol *CommunicationProtocol) hitResponse(msg string, state GameState) {
+func (protocol *CommunicationProtocol) HitResponse(msg string, state GameState) {
 	event := Event{
 		Type:    PlayerAttack,
 		Message: msg,
@@ -57,7 +57,7 @@ func (protocol *CommunicationProtocol) hitResponse(msg string, state GameState) 
 }
 
 // stingResponse sends an event indicating the hive has performed an attack.
-func (protocol *CommunicationProtocol) stingResponse(msg string, state GameState) {
+func (protocol *CommunicationProtocol) StingResponse(msg string, state GameState) {
 	event := Event{
 		Type:    HiveAttack,
 		Message: msg,
@@ -68,7 +68,7 @@ func (protocol *CommunicationProtocol) stingResponse(msg string, state GameState
 }
 
 // gameFinishedResponse sends an event indicating that the game has finished.
-func (protocol *CommunicationProtocol) gameFinishedResponse(msg string, state GameState) {
+func (protocol *CommunicationProtocol) GameFinishedResponse(msg string, state GameState) {
 	event := Event{
 		Type:    GameFinished,
 		Message: msg,

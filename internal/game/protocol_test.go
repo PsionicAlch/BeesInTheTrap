@@ -77,7 +77,7 @@ func TestWaitForPlayer(t *testing.T) {
 		communication.hitSignal <- struct{}{}
 	}()
 
-	communication.waitForPlayer()
+	communication.WaitForPlayer()
 }
 
 func TestHitResponse(t *testing.T) {
@@ -89,7 +89,7 @@ func TestHitResponse(t *testing.T) {
 	}
 
 	go func() {
-		communication.hitResponse(msg, state)
+		communication.HitResponse(msg, state)
 	}()
 
 	select {
@@ -111,7 +111,7 @@ func TestStingResponse(t *testing.T) {
 	}
 
 	go func() {
-		communication.stingResponse(msg, state)
+		communication.StingResponse(msg, state)
 	}()
 
 	select {
@@ -133,7 +133,7 @@ func TestGameFinishedResponse(t *testing.T) {
 	}
 
 	go func() {
-		communication.gameFinishedResponse(msg, state)
+		communication.GameFinishedResponse(msg, state)
 	}()
 
 	select {

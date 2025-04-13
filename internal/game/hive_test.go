@@ -25,62 +25,44 @@ func TestBeeTypeToString(t *testing.T) {
 	}
 }
 
-func TestTakeDamage(t *testing.T) {
-	var died bool
-
-	queenBee := &Bee{
-		Type:   QueenBee,
-		Health: 2 * damageAgainstQueen,
+func TestHiveTakeDamage(t *testing.T) {
+	scenarios := []struct {
+		beeType        BeeType
+		beeHealth      int
+		expectedHealth int
+		shouldHaveDied bool
+	}{
+		{QueenBee, damageAgainstQueen + 5, 5, false},
+		{QueenBee, damageAgainstQueen - 5, -5, true},
+		{WorkerBee, damageAgainstWorker + 5, 5, false},
+		{WorkerBee, damageAgainstWorker - 5, -5, true},
+		{DroneBee, damageAgainstDrone + 5, 5, false},
+		{DroneBee, damageAgainstDrone - 5, -5, true},
 	}
 
-	died = queenBee.takeDamage()
+	for _, scenario := range scenarios {
+		bee := &Bee{
+			Type:   scenario.beeType,
+			Health: scenario.beeHealth,
+		}
 
-	if died {
-		t.Errorf("Queen bee died when she should not have. Her health: %d\n", queenBee.Health)
-	}
+		died := bee.takeDamage()
 
-	died = queenBee.takeDamage()
+		if bee.Health != scenario.expectedHealth {
+			t.Errorf("Bee's health is different from what was expected after an attack. Expected health: %d. Bee's health: %d. Bee type: %s\n", bee.Health, scenario.expectedHealth, bee.Type)
+		}
 
-	if !died {
-		t.Errorf("Queen bee didn't die when she should have. Her health: %d\n", queenBee.Health)
-	}
+		if died && !scenario.shouldHaveDied {
+			t.Errorf("Bee died when she should not have. Bee type: %s\n", bee.Type)
+		}
 
-	workerBee := &Bee{
-		Type:   WorkerBee,
-		Health: 2 * damageAgainstWorker,
-	}
-
-	died = workerBee.takeDamage()
-
-	if died {
-		t.Errorf("Worker bee died when she should not have. Her health: %d\n", workerBee.Health)
-	}
-
-	died = workerBee.takeDamage()
-
-	if !died {
-		t.Errorf("Worker bee didn't die when she should have. Her health: %d\n", workerBee.Health)
-	}
-
-	droneBee := &Bee{
-		Type:   DroneBee,
-		Health: 2 * damageAgainstDrone,
-	}
-
-	died = droneBee.takeDamage()
-
-	if died {
-		t.Errorf("Drone bee died when she should not have. Her health: %d\n", droneBee.Health)
-	}
-
-	died = droneBee.takeDamage()
-
-	if !died {
-		t.Errorf("Drone bee didn't die when she should have. Her health: %d\n", droneBee.Health)
+		if !died && scenario.shouldHaveDied {
+			t.Errorf("Bee did not die when she should have died. Bee type: %s\n", bee.Type)
+		}
 	}
 }
 
-func TestGenerateHitMessage(t *testing.T) {
+func TestHiveGenerateHitMessage(t *testing.T) {
 	queenBee := Bee{
 		Type:   QueenBee,
 		Health: 100,

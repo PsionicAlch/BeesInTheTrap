@@ -8,7 +8,7 @@ This project was built to the specifications of the technical assessment, a copy
 
 ## 🧩 Game Overview
 
-You play as a lone wonderer with 100 HP, facing a hive composed of:
+You play as a lone wanderer with 100 HP, facing a hive composed of:
 
 - **1 Queen Bee** — 100 HP, deals 10 damage
 - **5 Worker Bees** — 75 HP each, deal 5 damage

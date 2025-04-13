@@ -6,8 +6,8 @@ package game
 // The protocol uses channels to coordinate player input and emit
 // game events in response to game logic execution.
 type CommunicationProtocol struct {
-	hitSignal    chan struct{} // Signals that the player wants to take their turn.
-	eventChannel chan Event    // Sends game events to the client.
+	hitSignal    chan struct{}
+	eventChannel chan Event
 }
 
 // createCommunicationProtocol initializes and returns a new CommunicationProtocol instance.

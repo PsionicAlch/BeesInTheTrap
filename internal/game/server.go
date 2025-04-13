@@ -21,7 +21,7 @@ type GameState struct {
 type GameServer struct {
 	finished      bool
 	state         GameState
-	communication *CommunicationProtocol
+	communication Protocol
 }
 
 // StartupServer initializes the game server and returns a communication channel for the client.

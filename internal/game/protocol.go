@@ -1,5 +1,14 @@
 package game
 
+type Protocol interface {
+	Hit() Event
+	WaitForCPU() Event
+	waitForPlayer()
+	hitResponse(string, GameState)
+	stingResponse(string, GameState)
+	gameFinishedResponse(string, GameState)
+}
+
 // CommunicationProtocol encapsulates the message flow between
 // the server-side game engine and the client.
 //

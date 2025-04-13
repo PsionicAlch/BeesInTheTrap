@@ -10,10 +10,14 @@ import (
 	"github.com/PsionicAlch/BeesInTheTrap/internal/game"
 )
 
+// IOReader abstracts reading input from any source supporting ReadString.
+// Primarily used to allow mocking/stubbing input in tests.
 type IOReader interface {
 	ReadString(delim byte) (string, error)
 }
 
+// Client represents the CLI interface to the game. It manages input/output,
+// command handling, game progression, and final result display.
 type Client struct {
 	communication game.Protocol
 	reader        IOReader
@@ -21,6 +25,7 @@ type Client struct {
 	fatalErr      func(error)
 }
 
+// createClient initializes a new Client instance.
 func createClient(communication game.Protocol, input io.Reader, output io.Writer, errFunc func(error)) *Client {
 	return &Client{
 		communication: communication,
@@ -30,6 +35,8 @@ func createClient(communication game.Protocol, input io.Reader, output io.Writer
 	}
 }
 
+// run starts the main gameplay loop. It alternates between user/auto input
+// and game engine responses, printing outcomes and ending on game over.
 func (c *Client) run() {
 	autoPlay := false
 
@@ -71,6 +78,7 @@ func (c *Client) run() {
 	}
 }
 
+// printIntro displays a welcome message and game instructions to the player.
 func (c *Client) printIntro() {
 	fmt.Fprintln(c.writer, `🐝 Welcome to Bees In The Trap 🐝
 
@@ -92,6 +100,8 @@ Commands:
 Let the stinger-slinging begin...`)
 }
 
+// readCommand prompts the player and reads a line of input from the reader.
+// Returns the trimmed command string.
 func (c *Client) readCommand() string {
 	fmt.Fprint(c.writer, "> ")
 
@@ -105,6 +115,7 @@ func (c *Client) readCommand() string {
 	return command
 }
 
+// printCommandError displays a message for unrecognized commands.
 func (c *Client) printCommandError() {
 	fmt.Fprintln(c.writer, `Invalid Command!
 
@@ -113,6 +124,8 @@ Commands:
 > auto      — Let fate decide and simulate the entire game`)
 }
 
+// printGameSummary formats and displays the final game state summary.
+// It provides narrative closure and statistics from the game session.
 func (c *Client) printGameSummary(state game.GameState) {
 	var playersFate string
 	var queensFate string
@@ -128,6 +141,7 @@ func (c *Client) printGameSummary(state game.GameState) {
 		finalCommentary = "Victory! The hive has fallen. Peace returns to the meadow."
 	}
 
+	// Determine queen's status.
 	queensIndex := slices.IndexFunc(state.Hive, func(bee game.Bee) bool {
 		return bee.Type == game.QueenBee
 	})
@@ -142,6 +156,7 @@ func (c *Client) printGameSummary(state game.GameState) {
 		}
 	}
 
+	// Count surviving bees.
 	for _, bee := range state.Hive {
 		if bee.Type == game.WorkerBee {
 			workerBeesAlive++
@@ -150,6 +165,7 @@ func (c *Client) printGameSummary(state game.GameState) {
 		}
 	}
 
+	// Final report.
 	fmt.Fprintf(c.writer, `
 📜 Game Summary
 ============================

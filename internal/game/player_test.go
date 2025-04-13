@@ -2,6 +2,9 @@ package game
 
 import "testing"
 
+// TestCreatePlayer verifies the behavior of the createPlayer function.
+// It ensures the player is initialized with the correct default health (100)
+// and that the miss chance is set correctly when specified or omitted.
 func TestCreatePlayer(t *testing.T) {
 	missChance := 35
 
@@ -15,6 +18,7 @@ func TestCreatePlayer(t *testing.T) {
 		t.Errorf("createPlayer generated player with incorrect miss chance. Expected: %d. Received: %d.\n", missChance, playerWithMissChance.MissChance)
 	}
 
+	// Test player creation with default miss chance.
 	missChance = 10
 
 	playerWithoutMissChance := createPlayer()
@@ -28,6 +32,8 @@ func TestCreatePlayer(t *testing.T) {
 	}
 }
 
+// TestPlayerTakeDamage ensures that the player takes damage correctly from various bee types.
+// It checks both the resulting health and whether the player is considered dead based on the damage.
 func TestPlayerTakeDamage(t *testing.T) {
 	scenarios := []struct {
 		playerHealth   int
@@ -64,6 +70,8 @@ func TestPlayerTakeDamage(t *testing.T) {
 	}
 }
 
+// TestPlayerGenerateHitMessage checks the message returned when a player is hit by a bee.
+// It confirms that the correct death or survival message is returned based on bee type and remaining health.
 func TestPlayerGenerateHitMessage(t *testing.T) {
 	scenarios := []struct {
 		playerHealth int
@@ -77,7 +85,7 @@ func TestPlayerGenerateHitMessage(t *testing.T) {
 		{5, WorkerBee, false, "Sting! You just got stun by a worker bee. You have 5 HP left."},
 		{0, DroneBee, true, "A drone bee just killed you!"},
 		{5, DroneBee, false, "Sting! You just got stun by a drone bee. You have 5 HP left."},
-		{5, BeeType(5), false, ""},
+		{5, BeeType(5), false, ""}, // Unknown bee type.
 	}
 
 	for _, scenario := range scenarios {

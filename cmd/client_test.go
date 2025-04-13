@@ -10,6 +10,7 @@ import (
 	"github.com/PsionicAlch/BeesInTheTrap/internal/game"
 )
 
+// TestCreateClient verifies that createClient returns a non-nil Client instance.
 func TestCreateClient(t *testing.T) {
 	client := createClient(&MockProtocol{}, os.Stdin, os.Stdout, func(err error) {})
 
@@ -18,6 +19,7 @@ func TestCreateClient(t *testing.T) {
 	}
 }
 
+// TestRun simulates different command sequences and checks that the correct output is printed.
 func TestRun(t *testing.T) {
 	input := strings.NewReader("wrong\nauto\n")
 	output := &bytes.Buffer{}
@@ -71,6 +73,7 @@ Commands:
 	}
 }
 
+// TestReadCommand simulates a failure in the input reader and checks that the fatalErr handler is invoked.
 func TestReadCommand(t *testing.T) {
 	var testErr string
 
@@ -90,6 +93,7 @@ func TestReadCommand(t *testing.T) {
 	}
 }
 
+// TestPrintGameSummary validates that various states produce expected narrative summaries.
 func TestPrintGameSummary(t *testing.T) {
 	scenarios := []struct {
 		state       game.GameState
@@ -125,11 +129,15 @@ func TestPrintGameSummary(t *testing.T) {
 	}
 }
 
+// --- Mock Implementations ---
+
+// MockProtocol is used as a testable standin for CommunicationProtocol.
 type MockProtocol struct {
 	events []game.Event
 	index  int
 }
 
+// Hit is used to simulate CommunicationProtocol's Hit function for testing.
 func (protocol *MockProtocol) Hit() game.Event {
 	event := protocol.events[protocol.index]
 	protocol.index++
@@ -137,6 +145,7 @@ func (protocol *MockProtocol) Hit() game.Event {
 	return event
 }
 
+// WaitForCPU is used to simulate CommunicationProtocol's Hit function for testing.
 func (protocol *MockProtocol) WaitForCPU() game.Event {
 	event := protocol.events[protocol.index]
 	protocol.index++
@@ -144,16 +153,16 @@ func (protocol *MockProtocol) WaitForCPU() game.Event {
 	return event
 }
 
-func (protocol *MockProtocol) WaitForPlayer() {}
-
-func (protocol *MockProtocol) HitResponse(string, game.GameState) {}
-
-func (protocol *MockProtocol) StingResponse(string, game.GameState) {}
-
+// Unused methods to satisfy Protocol interface.
+func (protocol *MockProtocol) WaitForPlayer()                              {}
+func (protocol *MockProtocol) HitResponse(string, game.GameState)          {}
+func (protocol *MockProtocol) StingResponse(string, game.GameState)        {}
 func (protocol *MockProtocol) GameFinishedResponse(string, game.GameState) {}
 
+// MockReader simulates a read failure when reading a command.
 type MockReader struct{}
 
+// ReadString always returns an error, used to test fatal error handling.
 func (reader *MockReader) ReadString(delim byte) (string, error) {
 	return "", errors.New("simulated read error")
 }

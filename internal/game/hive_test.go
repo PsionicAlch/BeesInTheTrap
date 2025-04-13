@@ -5,6 +5,9 @@ import (
 	"testing"
 )
 
+// TestBeeTypeToString verifies the correctness of the BeeType.String() method.
+// It ensures that each BeeType returns its expected string representation, and
+// handles unknown values gracefully.
 func TestBeeTypeToString(t *testing.T) {
 	scenarios := []struct {
 		beeType     BeeType
@@ -13,7 +16,7 @@ func TestBeeTypeToString(t *testing.T) {
 		{QueenBee, "Queen bee"},
 		{WorkerBee, "worker bee"},
 		{DroneBee, "drone bee"},
-		{BeeType(4), ""},
+		{BeeType(4), ""}, // Unknown type.
 	}
 
 	for _, scenario := range scenarios {
@@ -25,6 +28,8 @@ func TestBeeTypeToString(t *testing.T) {
 	}
 }
 
+// TestHiveTakeDamage ensures that bees take the correct amount of damage based on their type,
+// and that their alive/dead status is updated accordingly after damage is applied.
 func TestHiveTakeDamage(t *testing.T) {
 	scenarios := []struct {
 		beeType        BeeType
@@ -62,6 +67,8 @@ func TestHiveTakeDamage(t *testing.T) {
 	}
 }
 
+// TestHiveGenerateHitMessage checks if the correct message is generated after hitting a bee,
+// based on whether the bee died and its type.
 func TestHiveGenerateHitMessage(t *testing.T) {
 	queenBee := Bee{
 		Type:   QueenBee,
@@ -107,6 +114,8 @@ func TestHiveGenerateHitMessage(t *testing.T) {
 	}
 }
 
+// TestCreateBees verifies that createBees correctly initializes a slice of bees with
+// expected type, health, and miss chance. It also ensures unknown types return nil.
 func TestCreateBees(t *testing.T) {
 	scenarios := []struct {
 		beeType            BeeType
@@ -151,13 +160,15 @@ func TestCreateBees(t *testing.T) {
 		}
 	}
 
+	// Test invalid bee type.
 	bees := createBees(BeeType(5), 5)
-
 	if bees != nil {
 		t.Error("createBees returned a slice when nil was expected.")
 	}
 }
 
+// TestCreateHive validates that the createHive function returns a hive with the correct
+// composition of queens, workers, and drones.
 func TestCreateHive(t *testing.T) {
 	numQueens := 5
 	numWorkers := 10

@@ -2,6 +2,7 @@ package game
 
 import "testing"
 
+// TestStartupServer ensures that the StartupServer function returns a valid (non-nil) CommunicationProtocol.
 func TestStartupServer(t *testing.T) {
 	communication := StartupServer()
 
@@ -10,9 +11,11 @@ func TestStartupServer(t *testing.T) {
 	}
 }
 
+// TestRun verifies the full run loop for both player-win and player-loss scenarios.
 func TestRun(t *testing.T) {
 	mockProtocol := &MockProtocol{}
 
+	// Scenario: Player wins by killing a bee.
 	server := &GameServer{
 		finished:      false,
 		communication: mockProtocol,
@@ -22,13 +25,13 @@ func TestRun(t *testing.T) {
 			Stings: 0,
 			Player: Player{
 				Health:     100,
-				MissChance: 0, // Always hit
+				MissChance: 0, // Always hit.
 			},
 			Hive: []Bee{
 				{
 					Type:       QueenBee,
 					Health:     1,
-					MissChance: 100, // Always miss
+					MissChance: 100, // Always miss.
 				},
 			},
 		},
@@ -44,19 +47,20 @@ func TestRun(t *testing.T) {
 		t.Errorf("Expected at least one round to be completed.")
 	}
 
+	// Scenario: Player loses due to hive attacks.
 	server = &GameServer{
 		finished:      false,
 		communication: mockProtocol,
 		state: GameState{
 			Player: Player{
 				Health:     1,
-				MissChance: 100, // Always miss
+				MissChance: 100, // Always miss.
 			},
 			Hive: []Bee{
 				{
 					Type:       QueenBee,
 					Health:     100,
-					MissChance: 0, // Always hit
+					MissChance: 0, // Always hit.
 				},
 			},
 		},
@@ -73,7 +77,11 @@ func TestRun(t *testing.T) {
 	}
 }
 
+// TestPlayersTurn simulates the player's attack phase with various outcomes:
+// - A successful attack.
+// - A missed attack.
 func TestPlayersTurn(t *testing.T) {
+	// Successful hit and bee removed.
 	mockProtocol := &MockProtocol{
 		currentState: GameState{
 			Hits: 100,
@@ -116,6 +124,7 @@ func TestPlayersTurn(t *testing.T) {
 		t.Errorf("Expected playersTurn to return proper game state.")
 	}
 
+	// Missed attack, bee remains.
 	server = &GameServer{
 		communication: &MockProtocol{},
 		state: GameState{
@@ -144,7 +153,12 @@ func TestPlayersTurn(t *testing.T) {
 	}
 }
 
+// TestHivesTurn simulates the hive’s retaliation phase against the player:
+// - One test ensures the bee misses.
+// - One ensures the player is killed.
+// - One verifies correct state/message reporting.
 func TestHivesTurn(t *testing.T) {
+	// Hive misses the player.
 	server := &GameServer{
 		communication: &MockProtocol{},
 		state: GameState{
@@ -172,6 +186,7 @@ func TestHivesTurn(t *testing.T) {
 		t.Errorf("Expected player to still be alive.")
 	}
 
+	// Hive kills the player.
 	server = &GameServer{
 		communication: &MockProtocol{},
 		state: GameState{
@@ -199,6 +214,7 @@ func TestHivesTurn(t *testing.T) {
 		t.Errorf("Expected player to be dead.")
 	}
 
+	// Confirm that message/state was sent back correctly.
 	mockProtocol := &MockProtocol{
 		currentState: GameState{
 			Stings: 100,
@@ -234,32 +250,41 @@ func TestHivesTurn(t *testing.T) {
 	}
 }
 
+// --- Mock Protocol ---
+
+// MockProtocol implements the Protocol interface with test-friendly behavior.
 type MockProtocol struct {
 	finishedCalled bool
 	currentMessage string
 	currentState   GameState
 }
 
+// Hit is unused in these tests but required to implement the interface
 func (m *MockProtocol) Hit() Event {
 	return Event{}
 }
 
+// WaitForCPU is unused in server tests.
 func (m *MockProtocol) WaitForCPU() Event {
 	return Event{}
 }
 
+// WaitForPlayer is unused in server tests.
 func (m *MockProtocol) WaitForPlayer() {}
 
+// HitResponse simulates sending a result from a player hit.
 func (m *MockProtocol) HitResponse(msg string, state GameState) {
 	m.currentMessage = msg
 	m.currentState = state
 }
 
+// StingResponse simulates sending a result from a bee attack.
 func (m *MockProtocol) StingResponse(msg string, state GameState) {
 	m.currentMessage = msg
 	m.currentState = state
 }
 
+// GameFinishedResponse records that the game has concluded.
 func (m *MockProtocol) GameFinishedResponse(msg string, state GameState) {
 	m.finishedCalled = true
 }

@@ -5,6 +5,7 @@ import (
 	"time"
 )
 
+// TestCreateCommunicationProtocol verifies that the protocol and its channels are properly initialized.
 func TestCreateCommunicationProtocol(t *testing.T) {
 	communication := createCommunicationProtocol()
 
@@ -21,6 +22,7 @@ func TestCreateCommunicationProtocol(t *testing.T) {
 	}
 }
 
+// TestHit ensures the Hit method waits for a hit signal and correctly receives an event.
 func TestHit(t *testing.T) {
 	communication := createCommunicationProtocol()
 
@@ -48,6 +50,7 @@ func TestHit(t *testing.T) {
 	}
 }
 
+// TestWaitForCPU ensures CPU event messages are correctly received from the event channel.
 func TestWaitForCPU(t *testing.T) {
 	communication := createCommunicationProtocol()
 
@@ -70,6 +73,7 @@ func TestWaitForCPU(t *testing.T) {
 	}
 }
 
+// TestWaitForPlayer ensures that WaitForPlayer properly blocks until a signal is received.
 func TestWaitForPlayer(t *testing.T) {
 	communication := createCommunicationProtocol()
 
@@ -80,6 +84,7 @@ func TestWaitForPlayer(t *testing.T) {
 	communication.WaitForPlayer()
 }
 
+// TestHitResponse ensures that HitResponse sends the correct event over the channel.
 func TestHitResponse(t *testing.T) {
 	communication := createCommunicationProtocol()
 
@@ -102,6 +107,7 @@ func TestHitResponse(t *testing.T) {
 	}
 }
 
+// TestStingResponse ensures the StingResponse method delivers the correct event.
 func TestStingResponse(t *testing.T) {
 	communication := createCommunicationProtocol()
 
@@ -124,6 +130,7 @@ func TestStingResponse(t *testing.T) {
 	}
 }
 
+// TestGameFinishedResponse ensures the GameFinishedResponse sends the correct event at game end.
 func TestGameFinishedResponse(t *testing.T) {
 	communication := createCommunicationProtocol()
 

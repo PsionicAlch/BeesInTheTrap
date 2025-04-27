@@ -4,7 +4,7 @@ A turn-based command-line game written in Go, where you face off against a hive 
 
 Each game runs in its own goroutine, simulating server-like behavior in a local environment. The core loop is built to handle both player-controlled and automated simulations, showcasing concurrency via Go channels.
 
-This project was built to the specifications of the technical assessment, a copy of which can be found in [OBJECTIVE.md]("https://github.com/PsionicAlch/BeesInTheTrap/blob/main/OBJECTIVE.md").
+This project was built for a technical assessment according to the specifications of the technical assessment, a copy of which can be found in [OBJECTIVE.md]("https://github.com/PsionicAlch/BeesInTheTrap/blob/main/OBJECTIVE.md").
 
 ## 🧩 Game Overview
 
